@@ -1,0 +1,52 @@
+body {
+    font-size: 64px;
+    background-color: black;
+}
+.container {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 80px 80px 80px 80px;
+  grid-template-rows: 80px 80px;
+  grid-template-areas: 
+  "header header header header" 
+  "main main main main" 
+  "main main main main" 
+  "main main main main" 
+  "main main main main" 
+  "main main main main";
+}
+.item-header {
+  grid-area: header;
+  grid-row-start: 1;
+  grid-row-end: 1;
+  background-color: black;
+  color: white;
+  text-align: right;
+}
+.btn {
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+  background-color: dimgray;
+  border: none;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin: 4px 2px;
+  border-radius: 50%;
+}
+.btn:hover {
+  background-color: #fff;
+  color: #000;
+}
+.silver {
+  background-color: silver;
+  color: black;
+}
+.operator {
+  background-color: orange;
+}
+button {
+  cursor: pointer;
+  font-size: 26px;
+}
