@@ -1,4 +1,6 @@
 body {
+    padding-top: 50px;
+    font-family: helvetica, arial, 'sans-serif';
     font-size: 64px;
     background-color: black;
 }
