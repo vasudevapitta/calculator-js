@@ -3,24 +3,15 @@ $(()=>{
   function newCalc(){
 
   const model = {
-    key: '',
-    operator: '',
-    combined: '',
+    key: '', //numbers
+    operator: '', //math operators
+    combined: '', //string to evaluate
   };
 
   const controller = {
 
   	init(){
   		view.init();
-  	},
-
-  	setOperator(myOperator){
-		model.operator = myOperator;
-		return model.operator;
-  	},
-
-  	emptyOperator(){
-  		model.operator = '';
   	},
 
   	setKey(key){
@@ -33,6 +24,16 @@ $(()=>{
   		model.key = '';
   	},
 
+  	setOperator(myOperator){
+		model.operator = myOperator;
+		return model.operator;
+  	},
+
+  	emptyOperator(){
+  		model.operator = '';
+  	},
+
+  	//to fix abruptly ending strings for evaluation (ending with either / * % - or +)
   	fixString(stringOrNum){
   		let string = stringOrNum.toString();
   		const lastChar = string.slice(-1);
@@ -68,6 +69,7 @@ $(()=>{
   		return model.key;
   	},
 
+  	//handling negative integers & decimals
   	neg(stringOrNum){
   		const string = stringOrNum.toString();
   		const firstChar = string.charAt(0);
@@ -144,6 +146,6 @@ $(()=>{
   controller.init();
 }
 
-newCalc();
+newCalc(); //starts a new calculation
  
 });
