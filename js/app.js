@@ -143,7 +143,7 @@ $(()=>{
 
 		$(this.operator).click(function(){
       const lastChar = controller.lastChar();
-      const charCheck = (lastChar==='+' || lastChar==='-' || lastChar==='/' || lastChar==='*' || lastChar==='%' || lastChar==='.')?true:false;
+      const charCheck = (lastChar==='+' || lastChar==='-' || lastChar==='/' || lastChar==='*' || lastChar==='%' || lastChar=='.')?true:false;
       if(!charCheck){
         finalStep.call(this);
       }
