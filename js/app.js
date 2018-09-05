@@ -79,8 +79,20 @@ $(()=>{
 
   	combined(){
   		model.combined=model.combined+model.key+model.operator;
-  		return model.combined;
-  	}
+  		return model.combined.toString();
+  	},
+
+    lastChar(){
+      const string = this.combined();
+      const lastChar = string.slice(-1);
+      return lastChar;
+    },
+
+    chopLastOperator(){
+      const string = this.combined();
+      const choppedString = string.slice(0, -1);
+      model.combined=choppedString;
+    }
 
   };
 
@@ -130,10 +142,23 @@ $(()=>{
 		});
 
 		$(this.operator).click(function(){
-			const myOperator = controller.setOperator(this.innerHTML);
-			const result = controller.combined();
-			view.screen(result);
-			controller.emptyOperator();
+      const lastChar = controller.lastChar();
+      const charCheck = (lastChar==='+' || lastChar==='-' || lastChar==='/' || lastChar==='*' || lastChar==='%' || lastChar==='.')?true:false;
+      if(!charCheck){
+        finalStep.call(this);
+      }
+
+      else {
+        controller.chopLastOperator();
+        finalStep.call(this);
+      }
+
+      function finalStep(){
+        const myOperator = controller.setOperator(this.innerHTML);
+        const result = controller.combined();
+        view.screen(result);
+        controller.emptyOperator();
+      }
 		})
 
   	},
