@@ -60,7 +60,12 @@ $(()=>{
   	},
 
   	evaluate(string){
+      try {
   		model.combined = eval(string);
+      }
+      catch(err){
+      model.combined = 'err';
+      }
   		return model.combined;
   	},
 
@@ -72,9 +77,37 @@ $(()=>{
   	//handling negative integers & decimals
   	neg(stringOrNum){
   		const string = stringOrNum.toString();
-  		const firstChar = string.charAt(0);
-  		const result = (firstChar=='-')?model.combined=string.substr(1):model.combined='-'+model.combined;
-  		return result;
+
+  		const patt2 = /[+-/*%]/g;
+      let matchInd;
+      let result;
+        while ((match = patt2.exec(string)) != null) {
+        matchInd=match.index;
+      }
+
+      if(string.length===matchInd || matchInd===undefined || string.charAt(0)=='-'){
+        const firstChar = string.charAt(0);
+        model.combined = (firstChar=='-')?string.substr(1):'-'+model.combined;
+        return model.combined;
+      }
+      else {
+
+        const piece1 = string.slice(0, matchInd+1);
+        let piece2 = string.slice(matchInd-string.length);
+
+        const evaluate = piece2.charAt(0).match(/[+/%*]/g)?true:false;
+
+        if(evaluate){
+          String.prototype.replaceAt=function(index, replacement) {
+          return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
+          }
+          piece2=piece2.replaceAt(0, '-');
+        }
+
+        result = `${piece1}(${piece2})`;
+        console.log(result);
+      } 
+
   	},
 
   	combined(){
@@ -92,8 +125,11 @@ $(()=>{
       const string = this.combined();
       const choppedString = string.slice(0, -1);
       model.combined=choppedString;
-    }
+    },
 
+    getCombined(){
+      return model.combined;
+    },
   };
 
   const view = {
@@ -103,7 +139,10 @@ $(()=>{
   		this.equal = $('.equal');
   		this.clear = $('.clear');
   		this.neg = $('.neg');
-  		this.operator = $('.operator');
+      this.operator = $('.operator');
+      this.sqrt = $('.sqrt');
+      this.plusMinusDot = $('.plusMinusDot');
+  		this.backspace = $('.backspace');
   		this.currentOutputVal = $(this.output).html();
   		this.render();
   	},
@@ -111,6 +150,13 @@ $(()=>{
   	render(){
   		this.setUpEventListeners();
   	},
+
+    finalStep([open='']=[]){
+        const myOperator = controller.setOperator(`${open}${this.innerHTML}`);
+        const result = controller.combined();
+        view.screen(result);
+        controller.emptyOperator();
+    },
 
   	setUpEventListeners(){
 
@@ -128,6 +174,12 @@ $(()=>{
 		  	view.screen(result);
 		});
 
+    $(this.sqrt).click(function(){
+        const num = controller.combined();
+        const result = Math.sqrt(num);
+        view.screen(result);
+    });
+
 		$(this.clear).click(function(){
 		  const result = controller.clear();
 		  view.screen(result);
@@ -143,23 +195,30 @@ $(()=>{
 
 		$(this.operator).click(function(){
       const lastChar = controller.lastChar();
-      const charCheck = (lastChar==='+' || lastChar==='-' || lastChar==='/' || lastChar==='*' || lastChar==='%' || lastChar=='.')?true:false;
-      if(!charCheck){
-        finalStep.call(this);
-      }
 
-      else {
+      const patt1 = /[/*%]/g;
+
+      const charCheck = lastChar.match(patt1);
+      if(charCheck){
         controller.chopLastOperator();
-        finalStep.call(this);
       }
+        view.finalStep.call(this);
 
-      function finalStep(){
-        const myOperator = controller.setOperator(this.innerHTML);
-        const result = controller.combined();
-        view.screen(result);
-        controller.emptyOperator();
-      }
-		})
+		});
+
+    $(this.plusMinusDot).click(function(){
+      const newChar = $(this).html();
+      const lastChar = controller.lastChar();
+      const open=(lastChar===newChar)?'(':'';
+      const close=(lastChar===newChar)?')':'';
+        view.finalStep.call(this, open);
+    });
+
+    $(this.backspace).click(function(){
+      controller.chopLastOperator();
+      const result=controller.getCombined;
+      view.screen(result);
+    });
 
   	},
 
