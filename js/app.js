@@ -176,7 +176,8 @@ $(()=>{
 
     $(this.sqrt).click(function(){
         const num = controller.combined();
-        const result = Math.sqrt(num);
+        const evaluated = controller.evaluate(num);
+        const result = Math.sqrt(evaluated);
         view.screen(result);
     });
 
