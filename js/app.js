@@ -165,7 +165,7 @@ $(()=>{
   			const result = controller.setKey(key);
 	  		const addToCombined = controller.combined(result);
 	  		view.screen(addToCombined);
-			controller.emptyKey();
+			  controller.emptyKey();
 		});
 
 		$(this.equal).click(function(){
